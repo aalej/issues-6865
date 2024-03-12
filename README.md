@@ -1,5 +1,11 @@
 # Repro for issue 6865
 
+# Versions
+
+firebase-tools: v13.4.1<br>
+node: v20.10.0<br>
+platform: macOS Sonoma 14.3.1
+
 ## Steps to reproduce
 
 1. Run the emulators
