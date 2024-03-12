@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head> </head>
+  <body>
+    <form id="file-form">
+      <input type="file" multiple="true" />
+      <button type="submit">Upload</button>
+    </form>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import {
+        getStorage,
+        ref,
+        uploadBytes,
+        connectStorageEmulator,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+      // Feel free to change the config for testing. I'm using a fake config
+      const firebaseConfig = {
+        apiKey: "fake-api-key",
+        projectId: "demo-project",
+        storageBucket: "demo-project.appspot.com",
+        appId: "1:012345678911:web:e0d5f4a8391e9475378d82",
+      };
+
+      const firebaseApp = initializeApp(firebaseConfig);
+      const storage = getStorage(firebaseApp);
+      connectStorageEmulator(storage, "127.0.0.1", 9199);
+
+      const fileForm = document.getElementById("file-form");
+
+      fileForm.onsubmit = (e) => {
+        e.preventDefault();
+        const files = e.target[0]?.files;
+        uploadFiles(files);
+      };
+
+      async function uploadFiles(files) {
+        console.log("Upload files");
+        const uploadPromises = [];
+        for (let file of files) {
+          const storageRef = ref(storage, `temp/${file.name}`);
+          uploadPromises.push(uploadBytes(storageRef, file));
+        }
+        await Promise.all(uploadPromises);
+        console.log("Upload promises complete");
+      }
+    </script>
+  </body>
+</html>
